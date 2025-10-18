@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: oliver_landing
+    database: zachmathisen
+    schema: oliver_dw_source
+    tables:
+      - name: customer
+      - name: employee
+      - name: orderline
+      - name: orders
+      - name: product
+      - name: store
