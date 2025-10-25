@@ -11,3 +11,12 @@ models:
     description: "Insurance Policy Dimension"
   - name: fact_claim
     description: "Insurance Claim Fact"
+  - name: stg_customer_service_interactions
+    description: |
+      Staging model for customer service interactions.
+      Each record represents a call between a customer and an agent.
+  - name: fact_interaction
+    description: |
+      Customer Service Interaction Fact.
+      The grain of this table is customer + agent + date
+      Each record represents a call between a customer and an agent on a given date.
