@@ -11,5 +11,9 @@ models:
     description: "Oliver Store Dimension"
   - name: oliver_dim_date
     description: "Oliver Date Dimension"
+  - name: STG_EMPLOYEE_CERTIFICATIONS
+    description: "Employee Certifications"
   - name: fact_sales
     description: "Oliver Sales Fact"
+  - name: FACT_CERTIFICATION
+    description: "fact table that includes the employee, date, certification name and cost"
