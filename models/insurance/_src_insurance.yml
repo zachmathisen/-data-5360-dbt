@@ -2,10 +2,11 @@ version: 2
 
 sources:
   - name: insurance_landing
-    database: zachmathisen
+    database: ZACHMATHISEN
     schema: insurance_dw_source
     tables:
       - name: agents
       - name: claims
       - name: customers
       - name: policies
+      - name: customer_service_interactions
