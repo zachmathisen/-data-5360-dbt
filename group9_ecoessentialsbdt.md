@@ -36,7 +36,6 @@
         materialized = 'table',
         schema = 'ecoessentials'
     ) }}
-    
     SELECT
       product_id        AS prod_key,
       product_id        AS product_id,
@@ -56,7 +55,6 @@ FROM {{ source('online_purchases', 'product') }}
     with cte_date as (
     {{ dbt_date.get_date_dimension("1990-01-01", "2050-12-31") }}
     )
-     
     SELECT
     date_day as date_key,
     date_day,
@@ -70,8 +68,7 @@ FROM {{ source('online_purchases', 'product') }}
         materialized = 'table',
         schema = 'ecoessentials'
         )
-    }}
-     
+    }} 
     select
     campaign_id as campaign_key,
     campaign_id as campaign_id,
@@ -98,7 +95,6 @@ FROM {{ source('online_purchases', 'product') }}
         order_timestamp as order_timestamp
       from {{ source('online_purchases','order') }}
     )
-    
     select
       ol.order_line_id        as order_line_key,
       ol.order_id             as order_id,
@@ -115,7 +111,6 @@ FROM {{ source('online_purchases', 'product') }}
         schema = 'ecoessentials'
         )
     }}
-     
     SELECT
     emailid as email_key,
     emailid as email_id,
@@ -129,7 +124,6 @@ FROM {{ source('online_purchases', 'product') }}
         schema = 'ecoessentials'
         )
     }}
-     
     select
     emaileventid as event_key,
     emaileventid as event_id,
@@ -142,7 +136,6 @@ FROM {{ source('online_purchases', 'product') }}
         materialized = 'table',
         schema = 'ecoessentials'
     ) }}
-    
     SELECT
       c.customer_id          AS user_key,
       s.customerid           AS customer_id,
@@ -162,7 +155,6 @@ FROM {{ source('online_purchases', 'product') }}
 Creating fact tables email_events and sales
 3.2.1 eco_essentials_fact_email_events
     {{ config(materialized='table', schema='ecoessentials', alias='fact_email_events') }}
-    
     SELECT
       e.email_key,
       ev.event_key,
@@ -182,7 +174,6 @@ Creating fact tables email_events and sales
 
 3.2.2 eco_essentials_fact_sales
     {{ config(materialized='table', schema='ecoessentials', alias='fact_sales') }}
-    
     with ol as (
       select order_line_id, order_id, product_id, campaign_id, quantity, discount, price_after_discount
       from {{ source('online_purchases','order_line') }}
@@ -191,7 +182,6 @@ Creating fact tables email_events and sales
       select order_id, customer_id, order_timestamp
       from {{ source('online_purchases','order') }}
     )
-    
     select
       do.order_line_key                 as order_line_key,
       dp.prod_key                    as prod_key,
@@ -246,13 +236,40 @@ Creating fact tables email_events and sales
 
 
 4. Submit Screeshot of Dimensional Model
+<img width="1500" height="850" alt="image" src="https://github.com/user-attachments/assets/4687fbf5-8cb7-4b54-ad29-cdb0b24879b8" />
+
+<img width="1502" height="850" alt="image" src="https://github.com/user-attachments/assets/f1e9419f-c0dc-4547-9c9f-db9d0e376ffc" />
+
 
 5. Three Business Questions
   5.1. What is the top 5 preforming email by clicks we had? 
-    select top (5) dem.email_name, SUM(fee.click) as total_clicks
-    from fact_email_events as fee join dim_email dem on fee.email_key = dem.email_key
-    group by dem.email_name
-    orderby clicks desc;    
+        SELECT TOP 5 dem.email_name, SUM(fee.click) AS clicks
+        FROM ecoessentials.fact_email_events AS fee
+        JOIN ecoessentials.eco_essentials_dim_email AS dem
+          ON fee.email_key = dem.email_key
+        GROUP BY dem.email_name
+        ORDER BY clicks DESC;
+<img width="2064" height="1556" alt="image" src="https://github.com/user-attachments/assets/41c474b8-7879-423d-94bb-504bbd9f6c42" />
 
   5.2. What Campaign resulted in the most sales? 
-  5.3. What was the total discount that we gave last month?
+
+          USE DATABASE GROUP9PROJECT ;
+        USE SCHEMA GROUP9PROJECT.ECOESSENTIALS;
+         
+        SELECT c.campaign_name , SUM(s.PRICE_AFTER_DISCOUNT)
+        FROM ECO_ESSENTIALS_DIM_CAMPAIGN c 
+            JOIN FACT_SALES s 
+            ON c.campaign_key = s.campaign_key
+        GROUP BY c.campaign_name
+        ORDER BY SUM(s.PRICE_AFTER_DISCOUNT) DESC
+        LIMIT 1    
+<img width="2300" height="1046" alt="image" src="https://github.com/user-attachments/assets/07810d20-4dcd-418b-8889-e43f9db9b1d8" />
+     
+  5.3. What was the total discount that we gave to customers?
+        SELECT SUM(s.discount)  AS total_discount
+        FROM FACT_SALES s
+            JOIN ECO_ESSENTIALS_DIM_DATE d
+            ON s.date_key = d.date_key
+<img width="2308" height="842" alt="image" src="https://github.com/user-attachments/assets/e8e24c1a-3c38-4ade-93cc-8f7a9ebd9e4e" />
+
+    
