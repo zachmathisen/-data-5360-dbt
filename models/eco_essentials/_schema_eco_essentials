@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  # -------------------- Dimensions --------------------
+  - name: eco_essentials_dim_product
+    description: "Product dimension for EcoEssentials, containing product details."
+
+  - name: eco_essentials_dim_order
+    description: "Order-line dimension with individual line item details per order."
+
+  - name: eco_essentials_dim_user
+    description: "User dimension that merges online purchase customers with marketing subscribers."
+
+  - name: eco_essentials_dim_campaign
+    description: "Campaign dimension capturing promotional campaign details."
+
+  - name: eco_essentials_dim_email
+    description: "Email dimension storing information about email sends."
+
+  - name: eco_essentials_dim_event
+    description: "Event dimension storing metadata about email events."
+
+  - name: eco_essentials_dim_date
+    description: "Date dimension providing time intelligence attributes."
+
+  # ---------------------- Facts -----------------------
+  - name: eco_essentials_fact_sales
+    description: "Sales fact table at the order_line grain, connecting products, users, and campaigns."
+
+  - name: eco_essentials_fact_email_events
+    description: "Email engagement fact table at the email event grain, connecting users, campaigns, and dates."
+
