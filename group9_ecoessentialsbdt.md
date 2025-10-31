@@ -77,6 +77,7 @@ FROM {{ source('online_purchases', 'product') }}
     FROM {{ source('online_purchases', 'promotional_campaign') }}
 
 3.1.4  eco_essentials_dim_order
+
     {{ config(materialized='table', schema='ecoessentials', alias='dim_order') }}
     
     with order_lines as (
@@ -105,7 +106,9 @@ FROM {{ source('online_purchases', 'product') }}
     from order_lines ol
     left join orders o
       on o.order_id = ol.order_id
+      
 3.1.4  eco_essentials_dim_email
+
     {{ config(
         materialized = 'table',
         schema = 'ecoessentials'
@@ -119,6 +122,7 @@ FROM {{ source('online_purchases', 'product') }}
     FROM {{ source('marketing_cloud', 'ECOESSENTIALS_SALES') }}
 
 3.1.5 eco_essentials_dim_event
+
     {{ config(
         materialized = 'table',
         schema = 'ecoessentials'
@@ -132,6 +136,7 @@ FROM {{ source('online_purchases', 'product') }}
     FROM {{ source('marketing_cloud', 'ECOESSENTIALS_SALES') }}
 
 3.1.6 eco_essentials_dim_user
+
     {{ config(
         materialized = 'table',
         schema = 'ecoessentials'
@@ -154,6 +159,7 @@ FROM {{ source('online_purchases', 'product') }}
 
 Creating fact tables email_events and sales
 3.2.1 eco_essentials_fact_email_events
+
     {{ config(materialized='table', schema='ecoessentials', alias='fact_email_events') }}
     SELECT
       e.email_key,
@@ -173,6 +179,7 @@ Creating fact tables email_events and sales
     LEFT JOIN {{ ref('eco_essentials_dim_date') }}     d  ON d.date_key      = CAST(s.eventtimestamp AS DATE)
 
 3.2.2 eco_essentials_fact_sales
+
     {{ config(materialized='table', schema='ecoessentials', alias='fact_sales') }}
     with ol as (
       select order_line_id, order_id, product_id, campaign_id, quantity, discount, price_after_discount
@@ -202,6 +209,7 @@ Creating fact tables email_events and sales
     left join {{ ref('eco_essentials_dim_date') }}     dd on dd.date_key = cast(o.order_timestamp as date)
 
 3.3.1 Creating the Ecoessentials database schema: 
+
     version: 2
     
     models:
