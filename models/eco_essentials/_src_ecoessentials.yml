@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: online_purchases
+    database: group9project
+    schema: POSTGRES_RDS_TRANSACTIONAL_DB
+    quoting:
+      identifier: true  
+    tables:
+      - name: order
+        identifier: ORDER              # physical table
+      - name: order_line
+        identifier: ORDER_LINE         # physical table
+      - name: product
+        identifier: PRODUCT
+      - name: customer
+        identifier: CUSTOMER
+      - name: promotional_campaign
+        identifier: PROMOTIONAL_CAMPAIGN
+
+
+  - name: marketing_cloud
+    database: group9project
+    schema: s3
+    tables:
+      - name: ECOESSENTIALS_SALES
