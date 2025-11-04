@@ -3,12 +3,28 @@ version: 2
 models:
   - name: oliver_dim_customer
     description: "Oliver Customer Dimension"
+    columns:
+      - name: cust_key
+        tests:
+          - unique
   - name: oliver_dim_employee
     description: "Oliver Employee Dimension"
+    columns:
+      - name: emp_key
+        tests:
+          - not_null
   - name: oliver_dim_product
     description: "Oliver Product Dimension"
   - name: oliver_dim_store
     description: "Oliver Store Dimension"
+    columns:
+      - name: store_name
+        tests:
+          - accepted_values:
+              values:
+                - "North Skagway"
+                - "Franks Corner"
+                - "East Gilbert"
   - name: oliver_dim_date
     description: "Oliver Date Dimension"
   - name: STG_EMPLOYEE_CERTIFICATIONS
@@ -17,3 +33,9 @@ models:
     description: "Oliver Sales Fact"
   - name: FACT_CERTIFICATION
     description: "fact table that includes the employee, date, certification name and cost"
+    columns:
+      - name: EMPLOYEE_KEY
+        tests:
+          - relationships:
+              to: ref('OLIVER_DIM_EMPLOYEE') # the model you want to compare to
+              field: EMPLOYEE_KEY # the field on the model you want to compare to
