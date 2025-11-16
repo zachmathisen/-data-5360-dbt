@@ -4,29 +4,77 @@ models:
   # -------------------- Dimensions --------------------
   - name: eco_essentials_dim_product
     description: "Product dimension for EcoEssentials, containing product details."
+    columns:
+      - name: prod_key
+        tests:
+          - unique
 
   - name: eco_essentials_dim_order
     description: "Order-line dimension with individual line item details per order."
+    columns:
+      - name: quantity
+        description: "the amount of a product ordered"
+        tests:
+          - not_null 
 
   - name: eco_essentials_dim_user
     description: "User dimension that merges online purchase customers with marketing subscribers."
+    columns:
+      - name: user_key
+        description: "Unique Identifier for user"
+        tests:
+          - not_null 
 
   - name: eco_essentials_dim_campaign
     description: "Campaign dimension capturing promotional campaign details."
+    columns:
+      - name: CAMPAIGN_ID
+        tests:
+          - unique
 
   - name: eco_essentials_dim_email
     description: "Email dimension storing information about email sends."
+    columns:
+      - name: email_name
+        description: "Name of the email sent out by marketing"
+        tests:
+          - not_null 
 
   - name: eco_essentials_dim_event
     description: "Event dimension storing metadata about email events."
+    columns:
+      - name: event_type
+        tests:
+          - accepted_values:
+              values:
+                - "CLICK"
+                - "OPEN"
+                - "SENT"
 
   - name: eco_essentials_dim_date
     description: "Date dimension providing time intelligence attributes."
+    columns:
+      - name: date_day
+        tests:
+          - unique
 
   # ---------------------- Facts -----------------------
   - name: eco_essentials_fact_sales
     description: "Sales fact table at the order_line grain, connecting products, users, and campaigns."
+    columns:
+     - name: customer_id
+        tests:
+            - relationships:
+                to: ref('eco_essentials_dim_user') # the model you want to compare to
+                field: user_key # the field on the model you want to compare to
 
   - name: eco_essentials_fact_email_events
     description: "Email engagement fact table at the email event grain, connecting users, campaigns, and dates."
-
+    columns:
+      - name: event_type
+        tests:
+          - accepted_values:
+              values:
+                - "CLICK"
+                - "OPEN"
+                - "SENT"

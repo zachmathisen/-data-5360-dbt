@@ -16,5 +16,5 @@ SELECT
   c.customer_zip         AS user_zip,
   c.customer_country     AS user_country
 FROM {{ source('marketing_cloud', 'ECOESSENTIALS_SALES') }} s
-LEFT JOIN {{ source('online_purchases', 'customer') }} c
+FULL JOIN {{ source('online_purchases', 'customer') }} c
   ON TO_VARCHAR(c.customer_id) = s.customerid
